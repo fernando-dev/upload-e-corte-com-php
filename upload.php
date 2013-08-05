@@ -4,16 +4,20 @@
  *
  * @author Fernando Moreira <fernando@fernandomoreiraweb.com>
  */
+session_name("Upload");
+session_start();
+
 if(isset ($_POST['acao']) && $_POST['acao']=='Enviar') {
 
     $file = $_FILES['foto'];
-    $dir     = 'uploads/';
+    $dir  = 'uploads/';
 
     if( !is_dir($dir) ) @mkdir($dir);
     
     $ext = strtolower(strrchr($file['name'],"."));
     $nome_tmb = "200x200-".md5(uniqid('200x200')).$ext;
     image_crop($file['tmp_name'], $dir, $nome_tmb, 200, 200, 1);
+    files_dir($dir);    
 }
 
 
@@ -56,6 +60,21 @@ function image_crop($tipo, $dir, $thumb, $largura, $altura, $corte = false) {
     imagejpeg($nova, "$dir"."$thumb");
         
     return true;
+}
+
+
+function files_dir( $path = null ) {
+    $dir = dir($path);
+    $_SESSION['fotos'] = array();
+    while($file = $dir->read()){
+
+        if ($file!="." && $file!="..") {
+            $_SESSION['fotos'][] = $path.$file;
+        }
+
+    }
+
+    $dir->close();
 }
 
 

@@ -34,6 +34,19 @@
         </form>
 
         <hr>
+        <?php 
+
+        if(isset($_SESSION['fotos']) && !empty($_SESSION['fotos'])) {
+            echo "<ul class='thumbnails'>";
+            foreach ($_SESSION['fotos'] as $foto) {
+                echo '<li class="span2"><a href="'.$foto.'" class="thumbnail"><img src="'.$foto.'" alt=""></a></li>';
+            }
+            echo "</ul>";
+        }
+
+        ?>
+        <hr>
+        <div class="clearfix"></div>
 
         <footer>
             <p>by <a href="http://github.com/fernando-dev/">fernando-dev</a></p>
