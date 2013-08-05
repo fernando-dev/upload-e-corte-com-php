@@ -1,57 +1,54 @@
-<?php
+<?php include('upload.php'); ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Upload e corte de imagens com Bootstrap e PHP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upload e corte de imagens com Bootstrap e PHP">
+    <meta name="author" content="Fernando Moreira">
 
-/**
- * Corte de imagem com PHP
- *
- * @author Fernando Moreira <fernando@fernandomoreiraweb.com>
- */
- 
-if(isset ($_POST['acao']) && $_POST['acao']=='Enviar'){
-    function cortar_thumb($tipo, $dir, $thumb, $largura, $altura, $corte=0){
-        if(!list($w, $h) = getimagesize($tipo)) return "Tipo de imagem não suportado! 1";
-            $img = imagecreatefromjpeg($tipo);
+    <!-- Le styles -->
+    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">body { padding-top: 100px; }</style>
+    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
-            // resize
-            if($corte)
-            {
-                if($w < $largura or $h < $altura) return "A foto está muito pequena! 1";
-                    $ratio = max($largura/$w, $altura/$h);
-                    $h = $altura / $ratio;
-                    $x = ($w - $largura / $ratio) / 2;
-                    $w = $largura / $ratio;
-            }
-            else
-            {
-                if($w < $largura and $h < $altura) return "A foto está muito pequena! 2";
-                    $ratio = min($largura/$w, $altura/$h);
-                    $largura = $w * $ratio;
-                    $altura = $h * $ratio;
-                    $x = 0;
-            }
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-            $nova = imagecreatetruecolor($largura, $altura);
-            imagecopyresampled($nova, $img, 0, 0, $x, 0, $largura, $altura, $w, $h);
-            imagejpeg($nova, "$dir$thumb");
-            
-        return true;
-    }
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-114x114.png"></head>
+<body>
+    <div class="container">
+        <form action="" method="post" enctype="multipart/form-data">
+            <!-- <input type="file" name="foto" /> -->
+            <input type="file" name="foto" title="Procure um arquivo para adicionar">
+            <input type="hidden" name="acao" value="Enviar" />
+            <input type="submit" class="btn btn-primary" name="cadastrar" value="Enviar" />
+        </form>
 
-    $picture  = $_FILES['foto'];
-    $pasta    = 'thumb/';
-    
-    $extensao = strtolower(strrchr($picture['name'],"."));
+        <hr>
 
-    $nome_img = "thumb/img_orig$extensao";
-    $nome_tmb = "200x200-".md5(uniqid('200x200'))."$extensao";
+        <footer>
+            <p>&copy; Company 2012</p>
+        </footer>
+    </div>
+    <!-- /container -->
 
-    move_uploaded_file($picture['tmp_name'], $nome_img);
-    
-    cortar_thumb($nome_img, $pasta, $nome_tmb, 200, 200, 1);
-}
-?>
-
-<form action="" method="post" enctype="multipart/form-data">
-    <input type="file" name="foto" />
-    <input type="hidden" name="acao" value="Enviar" />
-    <input type="submit" name="cadastrar" value="Ok" />
-</form>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="http://gregpike.net/demos/bootstrap-file-input/bootstrap.file-input.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('input[type=file]').bootstrapFileInput();
+        });
+    </script>
+</body>
+</html>
