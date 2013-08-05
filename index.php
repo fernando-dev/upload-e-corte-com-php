@@ -22,12 +22,13 @@
     <link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-114x114.png"></head>
+    <link rel="apple-touch-icon" sizes="114x114" href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-114x114.png">
+</head>
 <body>
     <div class="container">
         <form action="" method="post" enctype="multipart/form-data">
             <!-- <input type="file" name="foto" /> -->
-            <input type="file" name="foto" title="Procure um arquivo para adicionar">
+            <input type="file" name="foto" title="Adicionar arquivo...">
             <input type="hidden" name="acao" value="Enviar" />
             <input type="submit" class="btn btn-primary" name="cadastrar" value="Enviar" />
         </form>
@@ -35,14 +36,13 @@
         <hr>
 
         <footer>
-            <p>&copy; Company 2012</p>
+            <p>by <a href="http://github.com/fernando-dev/">fernando-dev</a></p>
         </footer>
     </div>
     <!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="http://code.jquery.com/jquery.min.js"></script>
     <script src="http://gregpike.net/demos/bootstrap-file-input/bootstrap.file-input.js"></script>
     <script>
