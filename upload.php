@@ -7,7 +7,7 @@
 session_name("Upload");
 session_start();
 
-if(isset ($_POST['acao']) && $_POST['acao']=='Enviar') {
+if(isset($_POST['acao']) && $_POST['acao']=='Enviar') {
 
     $file = $_FILES['foto'];
     $dir  = 'uploads/';
@@ -17,9 +17,25 @@ if(isset ($_POST['acao']) && $_POST['acao']=='Enviar') {
     $ext = strtolower(strrchr($file['name'],"."));
     $nome_tmb = "200x200-".md5(uniqid('200x200')).$ext;
     image_crop($file['tmp_name'], $dir, $nome_tmb, 200, 200, 1);
-    files_dir($dir);    
+    files_dir($dir);
 }
 
+
+if(isset($_POST['src']) && !empty($_POST['src'])) {
+    $src = $_POST['src'];
+    $dir = explode('/', $_POST['src']);
+    $dir = $dir[0];
+
+    if(file_exists($src)) {
+        @unlink($src);
+        echo '<div class="alert">Imagem removida com sucesso!</div>';
+        files_dir($dir.'/');
+    }
+    else {
+        echo '<div class="alert">A imagem não existe!</div>';
+    }
+
+}
 
 function image_crop($tipo, $dir, $thumb, $largura, $altura, $corte = false) {
 
@@ -75,6 +91,10 @@ function files_dir( $path = null ) {
     }
 
     $dir->close();
+}
+
+function remove_aja( $src = null ) {
+
 }
 
 

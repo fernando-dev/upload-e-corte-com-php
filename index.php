@@ -10,7 +10,23 @@
 
     <!-- Le styles -->
     <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
-    <style type="text/css">body { padding-top: 100px; }</style>
+    <style type="text/css">
+        .container {
+            padding: 60px 0;
+            text-align: center;
+        }
+        .container h1 {
+            margin-bottom: 50px;
+        }
+        .thumbnails > li {
+            position: relative;
+        }
+        .thumbnails a.btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
     <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -26,6 +42,9 @@
 </head>
 <body>
     <div class="container">
+        
+        <h1>Upload e corte de imagens com Bootstrap e PHP</h1>
+
         <form action="" method="post" enctype="multipart/form-data">
             <!-- <input type="file" name="foto" /> -->
             <input type="file" name="foto" title="Adicionar arquivo...">
@@ -33,17 +52,18 @@
             <input type="submit" class="btn btn-primary" name="cadastrar" value="Enviar" />
         </form>
 
-        <hr>
         <?php 
-
         if(isset($_SESSION['fotos']) && !empty($_SESSION['fotos'])) {
             echo "<ul class='thumbnails'>";
+            echo "<hr>";
             foreach ($_SESSION['fotos'] as $foto) {
-                echo '<li class="span2"><a href="'.$foto.'" class="thumbnail"><img src="'.$foto.'" alt=""></a></li>';
+                echo '<li class="span2">';
+                echo '<a href="'.$foto.'" class="thumbnail"><img src="'.$foto.'" alt=""></a>';
+                echo '<a id="remove" class="btn btn-mini btn-success"><i class="icon-remove icon-white"></i></a>';
+                echo '</li>';
             }
             echo "</ul>";
         }
-
         ?>
         <hr>
         <div class="clearfix"></div>
@@ -61,6 +81,23 @@
     <script>
         $(document).ready(function(){
             $('input[type=file]').bootstrapFileInput();
+
+            $('.thumbnails').on('click', '#remove', function(){
+                var _parent = $(this).parent()
+                    _img    = _parent.find('img'),
+                    _src    = _img.attr('src');
+
+                $.ajax({
+                    type : 'post',
+                    data : 'src='+_src,
+                    url  : 'upload.php',
+                    success: function(retorno){
+                        $(this).remove();
+                        _img.remove();
+                        _parent.html(retorno);
+                    }
+                })
+            });
         });
     </script>
 </body>
