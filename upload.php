@@ -12,30 +12,42 @@ if(isset($_POST['acao']) && $_POST['acao']=='Enviar') {
     $file = $_FILES['foto'];
     $dir  = 'uploads/';
 
+    $file_name = $file['name'];
+    $file_tmp_name = $file['tmp_name'];
+
     if( !is_dir($dir) ) @mkdir($dir);
     
-    $ext = strtolower(strrchr($file['name'],"."));
-    $nome_tmb = "200x200-".md5(uniqid('200x200')).$ext;
-    image_crop($file['tmp_name'], $dir, $nome_tmb, 200, 200, 1);
+    $ext = strtolower(strrchr($file_name,"."));
+
+    $nome_img = md5(uniqid($file_name)).$ext;
+    $nome_tmb = "200x200-".$nome_img;
+
+    image_crop($file_tmp_name, $dir, $nome_img, 900, 600, false);
+    image_crop($file_tmp_name, $dir, $nome_tmb, 200, 200, true);
+
     files_dir($dir);
 }
 
 
 if(isset($_POST['src']) && !empty($_POST['src'])) {
-    $src = $_POST['src'];
-    $dir = explode('/', $_POST['src']);
-    $dir = $dir[0];
+    
+    $src  = $_POST['src'];
+    $exp  = explode('/', $_POST['src']);
+    $dir  = $exp[0];
+    $file = $exp[1];
 
     if(file_exists($src)) {
-        @unlink($src);
-        echo '<div class="alert">Imagem removida com sucesso!</div>';
-        files_dir($dir.'/');
+        @unlink($src); // Removemos a imagem thumb
+        @unlink($dir.'/'.str_replace('200x200-', '', $file)); // removemos a imagem grande
+        echo '<div class="alert">Imagem removida com sucesso!</div>'; // retornamos uma mensagem
+        files_dir($dir.'/'); // atualizamos a session com os arquivos no diretorio
     }
     else {
         echo '<div class="alert">A imagem não existe!</div>';
     }
 
 }
+
 
 function image_crop($tipo, $dir, $thumb, $largura, $altura, $corte = false) {
 
@@ -55,9 +67,9 @@ function image_crop($tipo, $dir, $thumb, $largura, $altura, $corte = false) {
         }
 
         $ratio = max($largura/$w, $altura/$h);
-        $h = $altura / $ratio;
-        $x = ($w - $largura / $ratio) / 2;
-        $w = $largura / $ratio;
+        $h     = $altura / $ratio;
+        $x     = ($w - $largura / $ratio) / 2;
+        $w     = $largura / $ratio;
     }
     else {
         if($w < $largura and $h < $altura) {
@@ -65,9 +77,9 @@ function image_crop($tipo, $dir, $thumb, $largura, $altura, $corte = false) {
             return false;
         }
 
-        $ratio = min($largura/$w, $altura/$h);
+        $ratio   = min($largura/$w, $altura/$h);
         $largura = $w * $ratio;
-        $altura = $h * $ratio;
+        $altura  = $h * $ratio;
         $x = 0;
     }
 
@@ -85,7 +97,12 @@ function files_dir( $path = null ) {
     while($file = $dir->read()){
 
         if ($file!="." && $file!="..") {
-            $_SESSION['fotos'][] = $path.$file;
+            if( str_replace('200x200-', '', $file) == $file ) {
+                $_SESSION['fotos']['big'][] = $path.$file;
+            }
+            if( str_replace('200x200-', '', $file) != $file ) {
+                $_SESSION['fotos']['thumb'][] = $path.$file;
+            }
         }
 
     }
@@ -93,9 +110,6 @@ function files_dir( $path = null ) {
     $dir->close();
 }
 
-function remove_aja( $src = null ) {
-
-}
 
 
 /* Debug simples */
